@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="button">Product</button><br><br>
+    <input type="text" id="name" placeholder="Product Name"/>
+    <input type="number" id="unit" placeholder="Unit"/>
+    <input type="number" id="price" placeholder="Price"/>
+    <button id="add">Add Product</button><br><br>
+    <input type="number" id="prod_id" placeholder="Product Id"/>
+    <button id="delete">Delete</button>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+        $("#button").click(function(){
+            $.get("http://127.0.0.1:8000/getProducts", function(response){
+                $.each(response, function(index, product){
+                    console.log(index)
+                    console.log(product)
+                })
+            });
+        });
+       
+        $('#add').click(function(){
+
+            let payload = {
+                name: $('#name').val(),
+                unit_id: $('#unit').val(),
+                price_per_unit: $('#price').val()
+            };
+
+            $.post("http://127.0.0.1:8000/insertProduct",
+                {'data': JSON.stringify(payload)},
+                    function(data, status){
+                    console.log(data)
+                    console.log(status)
+            }) 
+        });
+
+        $('#delete').click(function(){
+            let isDelete = confirm("Are you sure to delete "+ $('#prod_id').val() +" item?");
+            if (isDelete) {
+
+                let payload = {
+                    product_id: $('#prod_id').val(),
+                    };
+                $.post("http://127.0.0.1:8000/deleteProduct",
+                    {'product_id': JSON.stringify(payload)},
+                        function(data, status){
+                        console.log(data)
+                        console.log(status)
+                })
+            }
+        });
+        
+
+
+
+    </script>
+</body>
+</html>
